@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Finanzas Álvaro & Rebeca</title>
     
-    <!-- 1. Estilos (Tailwind CSS) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
       body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-      /* Custom slider styling */
+      /* Estilos para el slider */
       input[type=range] { -webkit-appearance: none; background: transparent; }
       input[type=range]::-webkit-slider-thumb {
         -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%;
@@ -22,30 +21,23 @@
       }
     </style>
 
-    <!-- 2. Import Map para dependencias (React, Icons, Charts) -->
     <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.2.0",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
-    "recharts": "https://esm.sh/recharts@2.12.2?external=react,react-dom",
-    "lucide-react": "https://esm.sh/lucide-react@0.344.0?external=react",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "vite": "https://esm.sh/vite@^7.3.0",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
-  }
-}
-</script>
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "recharts": "https://esm.sh/recharts@2.12.2?external=react,react-dom",
+        "lucide-react": "https://esm.sh/lucide-react@0.344.0?external=react"
+      }
+    }
+    </script>
     
-    <!-- 3. Babel para procesar JSX en el navegador -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
     <div id="root"></div>
 
-    <!-- 4. Código de la Aplicación -->
-    <script type="text/babel" data-presets="react,typescript" data-type="module">
+    <script type="text/babel" data-presets="react" data-type="module">
         import React, { useState } from 'react';
         import { createRoot } from 'react-dom/client';
         import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine, CartesianGrid } from 'recharts';
@@ -56,20 +48,14 @@
             PieChart, Layers, PiggyBank, ChevronDown, ChevronUp, ArrowDown 
         } from 'lucide-react';
 
-        // --- UTILS ---
+        // --- UTILIDADES ---
         const formatCurrency = (value) => {
             return new Intl.NumberFormat('es-MX', {
                 style: 'currency', currency: 'MXN', minimumFractionDigits: 0, maximumFractionDigits: 0,
             }).format(value);
         };
 
-        const formatCurrencyDecimals = (value) => {
-            return new Intl.NumberFormat('es-MX', {
-                style: 'currency', currency: 'MXN', minimumFractionDigits: 2, maximumFractionDigits: 2,
-            }).format(value);
-        };
-
-        // --- UI COMPONENTS ---
+        // --- COMPONENTES UI ---
         const Card = ({ children, className = '', title, subtitle }) => {
             return (
                 <div className={`bg-white rounded-xl shadow-sm border border-slate-100 p-6 ${className}`}>
@@ -84,9 +70,9 @@
             );
         };
 
-        // --- FEATURE COMPONENTS ---
+        // --- MÓDULOS DE LA APP ---
 
-        // 1. INCOME MODULE
+        // 1. MÓDULO DE INGRESOS
         const IncomeInputGroup = ({ name, data, onChange, color }) => {
             const handleChange = (field, value) => {
                 const numValue = parseFloat(value) || 0;
@@ -156,7 +142,7 @@
             );
         };
 
-        // 2. EXPENSES MODULE
+        // 2. MÓDULO DE GASTOS
         const ExpensesModule = ({ expenses, setExpenses, alvaroPocketMoney, setAlvaroPocketMoney, rebecaPocketMoney, setRebecaPocketMoney }) => {
             const [isAdding, setIsAdding] = useState(false);
             const [newExpense, setNewExpense] = useState({ name: '', amount: 0, owner: 'Compartido' });
@@ -246,7 +232,7 @@
             );
         };
 
-        // 3. HOUSING MODULE
+        // 3. MÓDULO DE VIVIENDA
         const HousingModule = ({ rent, setRent, services, setServices, splitPercentage, setSplitPercentage, alvaroNetIncome, rebecaNetIncome }) => {
             const totalHousing = rent + services;
             const alvaroPay = totalHousing * (splitPercentage / 100);
@@ -281,7 +267,7 @@
             );
         };
 
-        // 4. BONUSES MODULE
+        // 4. MÓDULO DE BONOS
         const BonusesModule = ({ bonuses, setBonuses, monthlyCashFlowAlvaro, monthlyCashFlowRebeca }) => {
             const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
             const [editingId, setEditingId] = useState(null);
@@ -372,7 +358,7 @@
             );
         };
 
-        // 5. INVESTMENT MODULE
+        // 5. MÓDULO DE INVERSIONES
         const InvestRow = ({ label, data, onChange, monthlyContribution, annualBonus, color }) => {
             return (
                 <div className="mb-4 pb-4 border-b border-slate-100 last:border-0">
@@ -399,8 +385,8 @@
                 currentBalance += currentBalance * dailyRate;
                 if (day % 30 === 0) currentBalance += monthlyContribution;
                 const dayOfYear = day % 365;
-                const monthIndex = Math.floor(dayOfYear / 30.5); // Approx
-                // Simplified injection logic for daily calc
+                const monthIndex = Math.floor(dayOfYear / 30.5); // Aprox
+                // Lógica simplificada de inyección
                 if (dayOfYear === 30 && bonusInjections[0]) currentBalance += bonusInjections[0];
                 if (dayOfYear === 59 && bonusInjections[1]) currentBalance += bonusInjections[1];
                 if (dayOfYear === 90 && bonusInjections[2]) currentBalance += bonusInjections[2];
@@ -640,8 +626,7 @@
             );
         };
 
-
-        // --- MAIN APP ---
+        // --- APP PRINCIPAL ---
         const App = () => {
             const [alvaroIncome, setAlvaroIncome] = useState({ netSalary: 18346, groceryVouchers: 1600, otherVouchers: 5000 });
             const [rebecaIncome, setRebecaIncome] = useState({ netSalary: 19360, groceryVouchers: 2916, otherVouchers: 0 });
